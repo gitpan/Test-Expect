@@ -1,4 +1,8 @@
 Revision history for Perl module Devel::ebug
 
+0.30 Tue Feb 28 21:54:16 GMT 2006
+     - added expect_handle to fetch the underlying Expect object
+       (patch by Kevin Riggle)
+
 0.29 Wed Mar 30 23:18:02 CST 2005
      - initial release

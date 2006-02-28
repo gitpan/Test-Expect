@@ -7,9 +7,10 @@ use Exporter;
 use Test::Builder;
 use base qw(Class::Accessor::Chained::Fast Exporter);
 __PACKAGE__->mk_accessors(qw(program));
-our $VERSION = "0.29";
+our $VERSION = "0.30";
 our @EXPORT = qw(
 expect_run
+expect_handle
 expect_is
 expect_like
 expect_send
@@ -47,6 +48,8 @@ sub expect_run {
   die $expect->error if $expect->error;
   $Test->ok(1, "expect_run");
 }
+
+sub expect_handle { return $expect->expect_handle(); }
 
 sub before {
   my $before = $expect->before;
@@ -112,7 +115,8 @@ Test::Expect - Automated driving and testing of terminal-based programs
 L<Test::Expect> is a module for automated driving and testing of
 terminal-based programs.  It is handy for testing interactive programs
 which have a prompt, and is based on the same concepts as the Tcl
-Expect tool.
+Expect tool.  As in L<Expect::Simple>, the L<Expect> object is made
+available for tweaking.
 
 L<Test::Expect> is intended for use in a test script.
 
@@ -158,6 +162,10 @@ The expect_like subroutine tests the output of the program like
 Test::More's like. It has an optional comment:
 
   expect_like(qr/Hi there, to testme/, "expect_like");
+
+=head2 expect_handle
+
+This returns the L<Expect> object.
 
 =head1 SEE ALSO
 

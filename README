@@ -19,7 +19,8 @@ DESCRIPTION
     Test::Expect is a module for automated driving and testing of
     terminal-based programs. It is handy for testing interactive programs
     which have a prompt, and is based on the same concepts as the Tcl Expect
-    tool.
+    tool. As in Expect::Simple, the Expect object is made available for
+    tweaking.
 
     Test::Expect is intended for use in a test script.
 
@@ -58,6 +59,9 @@ SUBROUTINES
     Test::More's like. It has an optional comment:
 
       expect_like(qr/Hi there, to testme/, "expect_like");
+
+  expect_handle
+    This returns the Expect object.
 
 SEE ALSO
     Expect, Expect::Simple.
