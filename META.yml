@@ -1,8 +1,23 @@
---- #YAML:1.0
+---
 name: Test-Expect
-version: 0.30
+version: 0.31
 author:
-  - Leon Brocard, C<< <acme@astray.com> >>
+  - 'Leon Brocard, C<< <acme@astray.com> >>'
 abstract: Automated driving and testing of terminal-based programs
 license: perl
-generated_by: Module::Build version 0.2611, without YAML.pm
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  Class::Accessor::Chained::Fast: 0
+  Expect::Simple: 0
+  Term::ReadLine: 0
+  Test::Builder: 0
+  Test::More: 0
+provides:
+  Test::Expect:
+    file: lib/Test/Expect.pm
+    version: 0.31
+generated_by: Module::Build version 0.280801
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

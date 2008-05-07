@@ -7,15 +7,16 @@ use Exporter;
 use Test::Builder;
 use base qw(Class::Accessor::Chained::Fast Exporter);
 __PACKAGE__->mk_accessors(qw(program));
-our $VERSION = "0.30";
-our @EXPORT = qw(
-expect_run
-expect_handle
-expect_is
-expect_like
-expect_send
-expect
-END
+our $VERSION = "0.31";
+our @EXPORT  = qw(
+    expect_run
+    expect_handle
+    expect_is
+    expect_like
+    expect_send
+    expect_quit
+    expect
+    END
 );
 
 my $Test = Test::Builder->new;
@@ -24,67 +25,72 @@ my $expect;
 my $sent;
 
 sub import {
-  my $self = shift;
-  if (@_) {
-    die @_;
-    my $package = caller;
-    $Test->exported_to($package);
-    $Test->plan(@_);
-  };
-  $Test->no_ending(0);
-  $self->export_to_level(1, $self, $_) foreach @EXPORT;
+    my $self = shift;
+    if (@_) {
+        die @_;
+        my $package = caller;
+        $Test->exported_to($package);
+        $Test->plan(@_);
+    }
+    $Test->no_ending(0);
+    $self->export_to_level( 1, $self, $_ ) foreach @EXPORT;
 }
 
 sub expect_run {
-  my(%conf) = @_;
-  $expect = Expect::Simple->new({
-  Cmd => "PERL_RL=\"o=0\" " . $conf{command},
-  Prompt => $conf{prompt},
-  DisconnectCmd => $conf{quit},
-  Verbose => 0,
-  Debug => 0,
-  Timeout => 100
-});
-  die $expect->error if $expect->error;
-  $Test->ok(1, "expect_run");
+    my (%conf) = @_;
+    $expect = Expect::Simple->new(
+        {   Cmd           => "PERL_RL=\"o=0\" " . $conf{command},
+            Prompt        => $conf{prompt},
+            DisconnectCmd => $conf{quit},
+            Verbose       => 0,
+            Debug         => 0,
+            Timeout       => 100
+        }
+    );
+    die $expect->error if $expect->error;
+    $Test->ok( 1, "expect_run" );
 }
 
 sub expect_handle { return $expect->expect_handle(); }
 
 sub before {
-  my $before = $expect->before;
-  $before =~ s/\r//g;
-  $before =~ s/^$sent// if $sent;
-  $before =~ s/^\n+//;
-  $before =~ s/\n+$//;
-  return $before;
+    my $before = $expect->before;
+    $before =~ s/\r//g;
+    $before =~ s/^$sent// if $sent;
+    $before =~ s/^\n+//;
+    $before =~ s/\n+$//;
+    return $before;
 }
 
 sub expect_like {
-  my($like, $comment) = @_;
-  $Test->like(before(), $like, $comment);
+    my ( $like, $comment ) = @_;
+    $Test->like( before(), $like, $comment );
 }
 
 sub expect_is {
-  my($is, $comment) = @_;
-  $Test->is_eq(before(), $is, $comment);
+    my ( $is, $comment ) = @_;
+    $Test->is_eq( before(), $is, $comment );
 }
 
 sub expect_send {
-  my($send, $comment) = @_;
-  $expect->send($send);
-  $sent = $send;
-  $Test->ok(1, $comment);
+    my ( $send, $comment ) = @_;
+    $expect->send($send);
+    $sent = $send;
+    $Test->ok( 1, $comment );
 }
 
 sub expect {
-  my($send, $is, $label) = @_;
-  expect_send($send, $label);
-  expect_is($is, $label);
+    my ( $send, $is, $label ) = @_;
+    expect_send( $send, $label );
+    expect_is( $is, $label );
+}
+
+sub expect_quit {
+    undef $expect;
 }
 
 sub END {
-  undef $expect;
+    expect_quit;
 }
 
 1;
@@ -166,6 +172,10 @@ Test::More's like. It has an optional comment:
 =head2 expect_handle
 
 This returns the L<Expect> object.
+
+=head1 expect_quit
+
+Closes the L<Expect> handle.
 
 =head1 SEE ALSO
 

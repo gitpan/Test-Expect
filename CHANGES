@@ -1,5 +1,9 @@
 Revision history for Perl module Devel::ebug
 
+0.31 Wed May  7 10:15:19 BST 2008
+     - add expect_quit method to close the Expect object
+       (patch by Alex Vandiver)
+
 0.30 Tue Feb 28 21:54:16 GMT 2006
      - added expect_handle to fetch the underlying Expect object
        (patch by Kevin Riggle)
